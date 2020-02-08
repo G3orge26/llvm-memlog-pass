@@ -1,14 +1,16 @@
-# Building LLVM and running our own Pass
+# Building LLVM and creating / running our own Pass
+
+## __General Overview__
+This repository is essentially an in depth guide on how to create an LLVM Pass and also how to build LLVM as well as your pass in your machine. The pass in this guide is run on LLVM version 6, however it should work in later and up to date versions such as 9 or 10 as well. Getting familiar with LLVM internals and Passes can be a quite tedious, I decided to create this guide presenting to the best of my ability and in as much detail as possible all of the things I learned trying to create MemLog Pass. MemLog was done as part of an assignment on [Type Systems and Programming Languages](https://www.csd.uoc.gr/~hy546/) course of University of Crete, Computer Science Department.
 
 ## __Pass Details__
-For precise instructions and very useful tips on how MemLog pass works and how to write a Pass in general refer to the full guide available at [README](llvm/lib/MemLog/README.md) contained in llvm/lib/MemLog. 
-
+For precise instructions on how MemLog pass works and useful tips and tricks on how to write a Pass in general refer to the full guide available at [README](llvm/lib/MemLog/) contained in llvm/lib/MemLog.
 
 ## __Section A: Building LLVM__
 
-### __Setting up the Enviroment__
-For this project, llvm 6 version was used cloned from : _https://github.com/llvm/llvm-project.git_ .
-Building LLVM can be a really memory intensive procedure so i had to create some more RAM than my 8G on my laptop.
+### __Setting up the Environment__
+For this project, LLVM 6 version was used, cloned from : _https://github.com/llvm/llvm-project.git_ .
+Building LLVM can be a really memory intensive procedure so I had to create some more RAM than my 8G on my laptop.
 
 ```
 fallocate -l 8G /swapfile
@@ -25,7 +27,7 @@ touch ld
 ln -s /usr/bin/ld.gold ld
 PATH=`pwd`:$PATH
 ```
- __*Important note*__ : If you build LLVM with ld.gold then when developing your pass and you have to run make again for it to be recompiled you have to use ld.gold again or else be prepared to rebuild llvm from ground up.
+ __*Important note*__ : If you build LLVM with ld.gold then when developing your pass and you have to run make again for it to be recompiled you have to use ld.gold again or else be prepared to rebuild LLVM from ground up.
 
 
 ### __Downloading and Building LLVM__
@@ -64,14 +66,14 @@ From our previous directory lets head back to llvm sources.
 cd ..
 cd llvm
 ```
-Since our pass name is MemLog we shall place our Pass implemenation files in /lib/MemLog directory.
+Since our pass name is MemLog we shall place our Pass implementation files in /lib/MemLog directory.
 
 ```
 cd lib
 mkdir MemLog
 cd MemLog
 ```
-You can go ahead now and place your own Cpp file in MemLog dir.
+You can go ahead now and place your own C++ file in MemLog dir.
 Our files are in the LLVM sources directory but is not yet included in LLVM's build process, lets change that. Firstly, create a file called "CMakeLists.txt" and enter the following:
 ```
 add_llvm_library( LLVMMemLog MODULE

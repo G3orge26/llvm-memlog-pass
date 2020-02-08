@@ -2,14 +2,14 @@
 
 ## __MemLog Pass__
 MemLog Pass is a relative "simple" pass that inject the appropriate code on a C binary that:
-1. Adds an fopen call at the begging of main function.
+1. Adds an fopen call at the beginning of main function.
 2. Iterates over the whole IR code and injects an fprintf function after every malloc and free call.
 3. Adds an fclose call before any return instructions in the main function.
 
 ## __Disclaimer:__
-Under no circumstances am I an expert on LLVM, and there might be other, better,  ways of accomplishing the same task, however since LLVM can be quite overwhelming for someone who hasn't had any previous experience on the subject, I decided to go ahead and dump here any knowledge I have acquired.
+Under no circumstances am I an expert on LLVM, and there might be other and better ways of accomplishing the same task, however since LLVM can be quite overwhelming for someone who hasn't had any previous experience on the subject, I decided to go ahead and present in this guide any knowledge I have acquired.
 
-## __First steps__
+## __First Steps__
 
 If you are a complete beginner on LLVM Passes I strongly recommend you open a new tab on your browser and follow the [Writing an LLVM Pass](http://llvm.org/docs/WritingAnLLVMPass.html) guide from the official documentation of LLVM. Go on, I will be waiting. Ok so now that you wrote that LLVM Pass (at least I hope so), you should have a .cpp file with the following code inside:
 
@@ -55,7 +55,7 @@ static RegisterStandardPasses Y(
 
 ### Theory break 
 Before proceeding further, lets take a look at how things work behind the scenes. As you may already have seen on [Writing an LLVM Pass](http://llvm.org/docs/WritingAnLLVMPass.html#the-modulepass-class),
-in LLVM context, a module is essentially a whole file, that contains  one or more functions (for example in C, C++ and Java we know we will probably have at least the main function), where each function contains BasicBlocks filled with Instructions. You can see a visual representation of this on the following figure.
+in LLVM context, a module is essentially a whole file, that contains one or more functions (for example in C, C++ and Java we know we will probably have at least the main function), where each function contains BasicBlocks filled with Instructions. You can see a visual representation of this on the following figure.
 
 ![](https://habrastorage.org/webt/4k/-g/nl/4k-gnlzr7e6573zeobjdcp91x5q.jpeg)
 
@@ -75,7 +75,7 @@ To be explicit, FunctionPass subclasses are not allowed to:
 3. Add or remove global variables from the current Module.
 4. Maintain state across invocations of runOnFunction (including global data).
 ```
-<sup>Taken from [Writing an LLVM Pass#FunctionPass](http://llvm.org/docs/WritingAnLLVMPass.html#the-functionpass-class) .
+<sup>Taken from [Writing an LLVM Pass#FunctionPass](http://llvm.org/docs/WritingAnLLVMPass.html#the-functionpass-class) .</sup>
 
 As such, for our MemLog pass, lets retrofit the tutorial pass, changing FunctionPass to Module pass and stripping code, preparing for our own Pass.
 Change your .cpp to look like the following:
@@ -131,7 +131,7 @@ __Note:__ not all these includes are required but since we will need them eventu
 
 We are now ready to start tinkering around slowly building our Pass to what we want it to be. 
 
-Before going in to make this specific Pass of this guide, you might wonder "This pass is good and all, but it doesn't do what my project/assignment requires, how can I know what instructions and how I'll have to use?"
+Before going in to make this specific MemLog Pass of this guide, you might wonder "This pass is good and all, but it doesn't do what my project/assignment requires, how can I know what instructions and how I'll have to use?"
 Worry not you rascal. Lets say that you want to make a different Pass that inserts some other library call that you have absolutely no idea what type of arguments it receives or what it's signature will look like in LLVM IR code, and you are lost. In that case the most easy way of overcoming this big boulder of a problem is simple. Create a dummy C program that calls the said functions, emit it's IR code and inspect it. 
 
 If you run this:
@@ -325,7 +325,7 @@ As you may have guessed, without setting properly all of the above in the source
 
 Without further a due lets proceed to actually code our Pass. 
 
-For this part, if you want an extremely in-depth explaination of how things work you are going to have to browse the [doxygen](https://llvm.org/doxygen/) pages containing the documentation of LLVM (similar to javadocs provided for Java), and you will also have to refer to [LLVM Programmer's Manual](http://llvm.org/docs/ProgrammersManual.html)
+For this part, if you want an extremely in-depth explanation of how things work you are going to have to browse the [doxygen](https://llvm.org/doxygen/) pages containing the documentation of LLVM (similar to javadocs provided for Java), and you will also have to refer to [LLVM Programmer's Manual](http://llvm.org/docs/ProgrammersManual.html)
 
 Assuming we pick up where we left off earlier on our LogMem.cpp file lets go ahead and create a method where we are going to set up our global variables. Our _prepareGlobals_ method will require 2 parameters an LLVMContext variable and a Module variable, so that we can access their methods. You should also add some variables in our Pass class as we will want to keep some references to things that will happen inside our function. For that reason add the following variables:
 ```cpp
@@ -415,7 +415,7 @@ Keep in mind though that you should have already decided what you want to print 
 
 At this point we have successfully constructed and inserted the Strings we will need further on as arguments to our calls. However you should be wondering how can we know what kind of attributes are required for this string. And given how, no, I am not a wizard Hagrid, as we said before, you will have to search in the my_dummy_proggy.ll in junction with [LLVM Language Reference Manual](https://llvm.org/docs/LangRef.html). As for all the setter and miscellaneous functions used above (and the rest we will use further on) and where to find them, you can search the [LLVM Programmer's Manual](http://llvm.org/docs/ProgrammersManual.html) but chances are you wont find everything in there. At that point you will have to go ahead an browse through the doxygen pages, scanning the classes of interest to you and their methods as well as their inherited methods. 
 
-Lets go ahead and create another method _prepareStructs_ with the same arguments that will set up for us the structs representing and required by FILE, so that we can accomodate the return type of fopen, and also pass it later on to fprintfs and fclose.
+Lets go ahead and create another method _prepareStructs_ with the same arguments that will set up for us the structs representing and required by FILE, so that we can accommodate the return type of fopen, and also pass it later on to fprintfs and fclose.
 Again detailed instructions will be available inside the code segment:
 ```cpp
 void prepareStructs(LLVMContext &ctx, Module &M) {
@@ -682,5 +682,5 @@ Remember that runOnModule function returns a boolean. That boolean represents wh
 
 With that, this guide is concluded. If you stayed with it through the end I would like to thank you. At this point you should have enough background/theory knowledge as well as enough confidence to browse the manuals and doxygen pages and find fast and efficiently what you want. 
 
-I hope I could give you a more friendly introduction to LLVM from what I experienced (which is the reason for writing all these). To me LLVM looked extremely difficult, to the point where I disliked it since at first glance the manuals provided by the LLVM creators are huge and expect you to understand a lot of things not clear to a newbie let alone that stackoverflow and github projects on LLVM are very limited and usually extremely introductory. However, once I started getting the hang of it and browsing through the manuals and doxygen knowing where and what to look for I have to admit it is a very interesting work and it allows, no-compiler-programmers such as myself to make a lot of interested things with Passes.
+I hope I could give you a more friendly introduction to LLVM from what I experienced (which is the reason for writing all these). To me LLVM looked extremely difficult, to the point where I disliked it since at first glance the manuals provided by the LLVM creators are huge and expect you to understand a lot of things not clear to a newbie let alone that stackoverflow and github projects on LLVM are very limited and usually extremely introductory or outdated. However, once I started getting the hang of it and browsing through the manuals and doxygen knowing where and what to look for I have to admit it is a very interesting work and it allows, no-compiler-programmers such as myself to make a lot of interested things with Passes.
 
