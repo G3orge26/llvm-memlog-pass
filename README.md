@@ -1,7 +1,7 @@
 # Building LLVM and creating / running our own Pass
 
 ## __General Overview__
-This repository is essentially an in depth guide on how to create an LLVM Pass and also how to build LLVM as well as your pass in your machine. The pass in this guide is run on LLVM version 6, however it should work in later and up to date versions such as 9 or 10 as well. Getting familiar with LLVM internals and Passes can be a quite tedious, I decided to create this guide presenting to the best of my ability and in as much detail as possible all of the things I learned trying to create MemLog Pass. MemLog was done as part of an assignment on [Type Systems and Programming Languages](https://www.csd.uoc.gr/~hy546/) course of University of Crete, Computer Science Department.
+This repository is essentially an in depth guide on how to create an LLVM Pass and also how to build LLVM as well as your pass in your machine. The pass in this guide is run on LLVM version 6, however it should work in later and up to date versions such as 9 or 10 as well. Getting familiar with LLVM internals and Passes can be a quite tedious task so I decided to create this guide presenting to the best of my ability and in as much detail as possible all of the things I learned trying to create MemLog Pass. MemLog was done as part of an assignment on [Type Systems and Programming Languages](https://www.csd.uoc.gr/~hy546/) course of University of Crete, Computer Science Department.
 
 ## __Pass Details__
 For precise instructions on how MemLog pass works and useful tips and tricks on how to write a Pass in general refer to the full guide available at [README](llvm/lib/MemLog/) contained in llvm/lib/MemLog.
