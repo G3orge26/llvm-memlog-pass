@@ -6,6 +6,8 @@ MemLog Pass is a relative "simple" pass that inject the appropriate code on a C 
 2. Iterates over the whole IR code and injects an fprintf function after every malloc and free call.
 3. Adds an fclose call before any return instructions in the main function.
 
+The injected fprintf calls log to a file, the memory location and size allocated for a malloc function, and the memory location freed for a free function.
+
 ## __Disclaimer:__
 Under no circumstances am I an expert on LLVM, and there might be other and better ways of accomplishing the same task, however since LLVM can be quite overwhelming for someone who hasn't had any previous experience on the subject, I decided to go ahead and present in this guide any knowledge I have acquired.
 
