@@ -10,7 +10,7 @@ For precise instructions on how MemLog pass works and useful tips and tricks on 
 
 ### __Setting up the Environment__
 For this project, LLVM 6 version was used, cloned from : _https://github.com/llvm/llvm-project.git_ .
-Building LLVM can be a really memory intensive procedure so I had to create some more RAM than my 8G on my laptop.
+Building LLVM can be a really memory intensive procedure so I had to create a swapfile since the 8GB physical memory that my laptop has was not enough.
 
 ```
 fallocate -l 8G /swapfile
